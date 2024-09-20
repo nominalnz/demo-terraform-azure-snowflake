@@ -9,7 +9,7 @@ data "azuread_service_principal" "msgraph" {
 resource "azuread_application" "terraform" {
   display_name = "sp-id-snowflake-management-demo-terraform"
   owners       = [data.azuread_client_config.current.object_id]
-  tags         = local.default_tags_list
+  tags         = local.common_tags_list
 
   required_resource_access {
     resource_app_id = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
