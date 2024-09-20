@@ -33,3 +33,26 @@ resource "azuread_app_role_assignment" "msgraph_application_readwrite_ownedby" {
   principal_object_id = azuread_service_principal.terraform.object_id
   resource_object_id  = data.azuread_service_principal.msgraph.object_id
 }
+
+# Access Terraform State files
+data "azurerm_storage_account" "tfstate" {
+  name                = "stnmnllztfstate"
+  resource_group_name = "rg-management"
+}
+
+resource "azurerm_role_assignment" "tfstate_account_reader" {
+  role_definition_name = "Reader and Data Access"
+  scope                = data.azurerm_storage_account.tfstate.id
+  principal_id         = azuread_service_principal.terraform.id
+}
+
+data "azurerm_storage_container" "tfstate" {
+  name                 = "snowflake-management-demo"
+  storage_account_name = "stnmnllztfstate"
+}
+
+resource "azurerm_role_assignment" "tfstate_container_contributor" {
+  role_definition_name = "Storage Blob Data Contributor"
+  scope                = data.azurerm_storage_container.tfstate.resource_manager_id
+  principal_id         = azuread_service_principal.terraform.id
+}
