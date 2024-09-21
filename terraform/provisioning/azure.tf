@@ -46,5 +46,5 @@ resource "azuread_application_federated_identity_credential" "github" {
   display_name   = "github"
   audiences      = ["api://AzureADTokenExchange"]
   issuer         = "https://token.actions.githubusercontent.com"
-  subject        = "repo:nominalnz/demo-terraform-azure-snowflake:environment:prod"
+  subject        = "repo:nominalnz/demo-terraform-azure-snowflake:environment:Production"
 }
