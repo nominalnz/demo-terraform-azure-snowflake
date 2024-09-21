@@ -63,10 +63,10 @@ resource "azurerm_role_assignment" "tfstate_container_contributor" {
 }
 
 # TEMP: Add role assignment for testing GH workflow
-data "azurerm_subscription" "current" {}
+# data "azurerm_subscription" "current" {}
 
-resource "azurerm_role_assignment" "access_admin" {
-  scope                = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
-  role_definition_name = "User Access Administrator"
-  principal_id         = azuread_service_principal.terraform.id
-}
+# resource "azurerm_role_assignment" "access_admin" {
+#   scope                = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+#   role_definition_name = "User Access Administrator"
+#   principal_id         = azuread_service_principal.terraform.id
+# }
