@@ -1,5 +1,5 @@
-default_connection_name = "myconnection" 
+default_connection_name = "default" 
   
 [connections] 
-[connections.myconnection]
+[connections.default]
 user = ""

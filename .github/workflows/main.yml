@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     env:
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.AZURE_PRINCIPAL_ID }}
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_AUTHENTICATOR: OAUTH
-      SNOWFLAKE_CONNECTIONS_MYCONNECTION_ROLE: SNOWSQL_RL
+      SNOWFLAKE_CONNECTIONS_DEFAULT_USER: ${{ secrets.AZURE_PRINCIPAL_ID }}
+      SNOWFLAKE_CONNECTIONS_DEFAULT_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_CONNECTIONS_DEFAULT_AUTHENTICATOR: OAUTH
+      SNOWFLAKE_CONNECTIONS_DEFAULT_ROLE: SNOWSQL_RL
     
     steps:
 
@@ -22,60 +22,14 @@ jobs:
       with:
         persist-credentials: false
         
-    - run: echo $ACTIONS_ID_TOKEN_REQUEST_URL
-    - run: echo $ACTIONS_ID_TOKEN_REQUEST_TOKEN
-
-    # - run: |
-    #     curl -X POST \
-    #       -H "Content-Type: application/x-www-form-urlencoded" \
-    #       -d "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
-    #       -d "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" \
-    #       -d "client_assertion=$ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-    #       -d "grant_type=client_credentials" \
-    #       -d "scope=${{ secrets.OAUTH_SERVER_IDENTIFIER_URI }}/.default" \
-    #       "https://login.microsoftonline.com/${{ secrets.AZURE_TENANT_ID }}/oauth2/v2.0/token"
-
-    - uses: actions/github-script@v6
-      id: script
-      timeout-minutes: 10
-      with:
-        debug: true
-        script: |
-          const token = process.env['ACTIONS_RUNTIME_TOKEN']
-          const runtimeUrl = process.env['ACTIONS_ID_TOKEN_REQUEST_URL']
-          core.setOutput('TOKEN', token.trim())
-          core.setOutput('IDTOKENURL', runtimeUrl.trim())
-          
-    - run: |
-        IDTOKEN=$(curl -H "Authorization: bearer  ${{steps.script.outputs.TOKEN}}" ${{steps.script.outputs.IDTOKENURL}}  -H "Accept: application/json; api-version=2.0" -H "Content-Type: application/json" -d "{}" | jq -r '.value')
-        echo $IDTOKEN
-        jwtd() {
-            if [[ -x $(command -v jq) ]]; then
-                jq -R 'split(".") | .[0],.[1] | @base64d | fromjson' <<< "${1}"
-                echo "Signature: $(echo "${1}" | awk -F'.' '{print $3}')"
-            fi
-        }
-        jwtd $IDTOKEN
-        echo "idToken=${IDTOKEN}" >> $GITHUB_OUTPUT
-      id: tokenid
-
     - name: Azure CLI Login
       uses: azure/login@v2
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         allow-no-subscriptions: true
   
-    - name: Azure CLI script
-      uses: azure/cli@v2
-      with:
-        azcliversion: latest
-        inlineScript: |
-          az account show
-          # You can write your Azure CLI inline scripts here.
-  
-    - name: Azure CLI script
+    - name: Get Snowflake access token
       uses: azure/cli@v2
       with:
         azcliversion: latest
@@ -83,13 +37,11 @@ jobs:
           access_token=$(az account get-access-token --scope ${{ secrets.OAUTH_SERVER_IDENTIFIER_URI }}/.default --query accessToken -o tsv)
           echo "SNOWFLAKE_CONNECTIONS_MYCONNECTION_TOKEN=$access_token" >> "$GITHUB_ENV"
 
-      # Snowflake CLI installation
     - uses: Snowflake-Labs/snowflake-cli-action@v1
       with:
-        cli-version: "latest"
-        default-config-file-path: "config.toml"
+        cli-version: latest
+        default-config-file-path: config.toml
 
-      # Use the CLI
     - name: Execute Snowflake CLI command
       run: |
         snow --version
