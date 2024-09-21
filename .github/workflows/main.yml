@@ -16,6 +16,12 @@ jobs:
       SNOWFLAKE_CONNECTIONS_MYCONNECTION_ROLE: SNOWSQL_RL
     
     steps:
+
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+        
     - run: echo $ACTIONS_ID_TOKEN_REQUEST_URL
     - run: echo $ACTIONS_ID_TOKEN_REQUEST_TOKEN
 
