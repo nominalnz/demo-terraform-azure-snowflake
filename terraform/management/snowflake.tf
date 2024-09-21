@@ -4,24 +4,20 @@ resource "random_password" "azp_provisioner" {
 }
 
 resource "snowflake_user" "azp_provisioner" {
-  name     = "AZP_PROVISIONER"
+  name     = "AZP_PROVISIONER_USER"
   password = random_password.azp_provisioner.result
 }
 
-# data "snowflake_roles" "useradmin" {
-#   like = "USERADMIN"
-# }
+resource "snowflake_account_role" "azp_provisioner" {
+  name = "AZP_PROVISIONER"
+}
 
-# output "snowflake_roles_useradmin_output" {
-#   value = data.snowflake_roles.useradmin.roles
-# }
-
-# resource "snowflake_grant_account_role" "useradmin" {
-#   role_name = data.snowflake_roles.useradmin.roles[0].show_output[0].name
-#   user_name = snowflake_user.useradmin.name
-# }
-
-resource "snowflake_grant_account_role" "azp_provisioner_useradmin" {
-  role_name = "USERADMIN"
+resource "snowflake_grant_account_role" "azp_provisioner" {
+  role_name = snowflake_account_role.azp_provisioner.name
   user_name = snowflake_user.azp_provisioner.name
+}
+
+resource "snowflake_grant_account_role" "_azp_provisioner" {
+  role_name        = snowflake_account_role.azp_provisioner.name
+  parent_role_name = "ACCOUNTADMIN"
 }
