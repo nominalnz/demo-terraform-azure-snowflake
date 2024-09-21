@@ -1,0 +1,8 @@
+#!/bin/bash
+
+snowsql \
+    -a $SNOWFLAKE_ACCOUNT \
+    -u $(terraform output -raw oauth_client_principal_id) \
+    -r SNOWSQL_RL \
+    --authenticator oauth \
+    --token "$(./get-access-token)"

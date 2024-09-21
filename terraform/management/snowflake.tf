@@ -4,12 +4,20 @@ resource "random_password" "azp_provisioner" {
 }
 
 resource "snowflake_user" "azp_provisioner" {
-  name     = "AZP_PROVISIONER_USER"
-  password = random_password.azp_provisioner.result
+  name         = "AZP_PROVISIONER_USER"
+  login_name   = "AZP_PROVISIONER_USER"
+  display_name = "AZP_PROVISIONER_USER"
+  password     = random_password.azp_provisioner.result
 }
 
 resource "snowflake_account_role" "azp_provisioner" {
   name = "AZP_PROVISIONER"
+}
+
+resource "snowflake_grant_privileges_to_account_role" "azp_provisioner" {
+  privileges        = ["CREATE USER", "CREATE ROLE"]
+  account_role_name = snowflake_account_role.azp_provisioner.name
+  on_account        = true
 }
 
 resource "snowflake_grant_account_role" "azp_provisioner" {

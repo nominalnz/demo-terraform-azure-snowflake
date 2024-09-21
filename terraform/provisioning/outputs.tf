@@ -11,6 +11,10 @@ output "oauth_client_client_id" {
   value = azuread_application.oauth_client.client_id
 }
 
+output "oauth_client_principal_id" {
+  value = azuread_service_principal.oauth_client.object_id
+}
+
 output "azure_tenant_id" {
   value = data.azuread_client_config.current.tenant_id
 }
