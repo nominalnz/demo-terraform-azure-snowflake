@@ -12,9 +12,17 @@ terraform {
       source  = "hashicorp/random"
       version = "3.6.3"
     }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "4.2.0"
+    }
   }
 }
 
 provider "snowflake" {
   role = "AZP_PROVISIONER"
+}
+
+provider "azurerm" {
+  features {}
 }

@@ -48,3 +48,12 @@ resource "azuread_application_federated_identity_credential" "github" {
   issuer         = "https://token.actions.githubusercontent.com"
   subject        = "repo:nominalnz/demo-terraform-azure-snowflake:environment:Production"
 }
+
+# TEMP: Add role assignment for testing GH workflow
+data "azurerm_subscription" "current" {}
+
+resource "azurerm_role_assignment" "oauth_client" {
+  scope                = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+  role_definition_name = "Reader"
+  principal_id         = azuread_service_principal.oauth_client.id
+}
