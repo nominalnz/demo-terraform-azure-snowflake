@@ -7,7 +7,7 @@ permissions:
 jobs: 
   test:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: Production
     steps:
     - name: Azure CLI Login
       uses: azure/login@v2
