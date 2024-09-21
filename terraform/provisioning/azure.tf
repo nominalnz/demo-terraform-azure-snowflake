@@ -40,3 +40,11 @@ resource "azuread_service_principal" "oauth_client" {
 #   principal_object_id = azuread_application.oauth_client.object_id
 #   resource_object_id  = data.azuread_service_principal.oauth_server.object_id
 # }
+
+resource "azuread_application_federated_identity_credential" "github" {
+  application_id = azuread_application.oauth_client.id
+  display_name   = "github"
+  audiences      = ["api://AzureADTokenExchange"]
+  issuer         = "https://token.actions.githubusercontent.com"
+  subject        = "repo:nominalnz/demo-terraform-azure-snowflake:environment:prod"
+}
