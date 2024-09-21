@@ -12,6 +12,17 @@ jobs:
     steps:
     - run: echo $ACTIONS_ID_TOKEN_REQUEST_URL
     - run: echo $ACTIONS_ID_TOKEN_REQUEST_TOKEN
+
+    - run: |
+        curl -X POST \
+          -H "Content-Type: application/x-www-form-urlencoded" \
+          -d "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
+          -d "client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer" \
+          -d "client_assertion=$ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          -d "grant_type=client_credentials" \
+          -d "scope=${{ secrets.OAUTH_SERVER_IDENTIFIER_URI }}/.default" \
+          "https://login.microsoftonline.com/${{ secrets.AZURE_TENANT_ID }}/oauth2/v2.0/token"
+
     - name: Azure CLI Login
       uses: azure/login@v2
       with:
