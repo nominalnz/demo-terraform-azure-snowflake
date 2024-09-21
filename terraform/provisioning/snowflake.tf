@@ -1,8 +1,3 @@
-# CREATE USER SNOWSQL_OAUTH_USER 
-# LOGIN_NAME = '4c99a1d6-50ce-4e7d-9cc2-429c26d613df' 
-# DISPLAY_NAME = 'SnowSQL OAuth User' 
-# COMMENT = 'A system user for SnowSQL client to be used for OAuth based connectivity';
-
 resource "snowflake_user" "oauth_user" {
   name         = "SNOWSQL_OAUTH_USER"
   login_name   = azuread_service_principal.oauth_client.object_id
