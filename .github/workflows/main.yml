@@ -74,8 +74,7 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
-          response=$(az account get-access-token --scope ${{ secrets.OAUTH_SERVER_IDENTIFIER_URI }}/.default)
-          access_token=$(echo $response | jq -r '.access_token')
+          access_token=$(az account get-access-token --scope ${{ secrets.OAUTH_SERVER_IDENTIFIER_URI }}/.default --query accessToken -o tsv)
           echo "SNOWFLAKE_CONNECTIONS_MYCONNECTION_TOKEN=$access_token" >> "$GITHUB_ENV"
 
       # Snowflake CLI installation
