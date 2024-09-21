@@ -1,8 +1,8 @@
-output "azuread_application_terraform_client_id" {
+output "terraform_client_id" {
   value = azuread_application.terraform.client_id
 }
 
-output "azuread_application_terraform_password" {
+output "terraform_secret" {
   value     = azuread_application_password.terraform.value
   sensitive = true
 }

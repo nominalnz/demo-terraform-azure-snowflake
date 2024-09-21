@@ -11,6 +11,6 @@ output "azp_provisioner_role" {
   value = snowflake_account_role.azp_provisioner.name
 }
 
-output "azuread_application_oauth_server_client_id" {
+output "oauth_server_client_id" {
   value = azuread_application.oauth_server.client_id
 }
