@@ -1,5 +1,11 @@
-resource "snowflake_user" "useradmin" {
-  name = "USERADMIN_USER"
+resource "random_password" "azp_provisioner" {
+  length  = 16
+  special = false
+}
+
+resource "snowflake_user" "azp_provisioner" {
+  name     = "AZP_PROVISIONER"
+  password = random_password.azp_provisioner.result
 }
 
 # data "snowflake_roles" "useradmin" {
@@ -15,7 +21,7 @@ resource "snowflake_user" "useradmin" {
 #   user_name = snowflake_user.useradmin.name
 # }
 
-resource "snowflake_grant_account_role" "useradmin" {
+resource "snowflake_grant_account_role" "azp_provisioner_useradmin" {
   role_name = "USERADMIN"
-  user_name = snowflake_user.useradmin.name
+  user_name = snowflake_user.azp_provisioner.name
 }
