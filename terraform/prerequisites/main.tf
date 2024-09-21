@@ -21,6 +21,11 @@ resource "azuread_application" "terraform" {
   }
 }
 
+resource "azuread_application_password" "terraform" {
+  application_id = azuread_application.terraform.id
+  display_name   = "local"
+}
+
 resource "azuread_service_principal" "terraform" {
   client_id                    = azuread_application.terraform.client_id
   app_role_assignment_required = false
