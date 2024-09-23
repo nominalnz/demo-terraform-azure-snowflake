@@ -8,9 +8,17 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "4.2.0"
     }
+    snowflake = {
+      source  = "Snowflake-Labs/snowflake"
+      version = "0.96.0"
+    }
   }
 }
 
 provider "azurerm" {
   features {}
+}
+
+provider "snowflake" {
+  role = "ACCOUNTADMIN"
 }
