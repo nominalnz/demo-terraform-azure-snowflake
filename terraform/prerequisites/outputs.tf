@@ -20,15 +20,15 @@ output "azp_provisioner_role" {
   value = snowflake_account_role.azp_provisioner.name
 }
 
-output "integration_management_user" {
-  value = snowflake_user.integration_management.name
+output "integration_user" {
+  value = snowflake_user.integration.name
 }
 
-output "integration_management_password" {
-  value     = snowflake_user.integration_management.password
+output "integration_password" {
+  value     = snowflake_user.integration.password
   sensitive = true
 }
 
-output "integration_management_role" {
-  value = snowflake_account_role.integration_management.name
+output "integration_role" {
+  value = snowflake_account_role.integration.name
 }

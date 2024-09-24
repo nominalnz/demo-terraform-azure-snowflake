@@ -35,37 +35,37 @@ resource "snowflake_grant_account_role" "_azp_provisioner" {
 }
 
 ##################################################################################################
-# Integration Management
+# Integration
 ##################################################################################################
 
-resource "random_password" "integration_management" {
+resource "random_password" "integration" {
   length  = 16
   special = false
 }
 
-resource "snowflake_user" "integration_management" {
-  name         = "INTEGRATION_MANAGEMENT_USER"
-  login_name   = "INTEGRATION_MANAGEMENT_USER"
-  display_name = "INTEGRATION_MANAGEMENT_USER"
-  password     = random_password.integration_management.result
+resource "snowflake_user" "integration" {
+  name         = "INTEGRATION_USER"
+  login_name   = "INTEGRATION_USER"
+  display_name = "INTEGRATION_USER"
+  password     = random_password.integration.result
 }
 
-resource "snowflake_account_role" "integration_management" {
-  name = "INTEGRATION_MANAGEMENT"
+resource "snowflake_account_role" "integration" {
+  name = "INTEGRATION"
 }
 
-resource "snowflake_grant_privileges_to_account_role" "integration_management" {
+resource "snowflake_grant_privileges_to_account_role" "integration" {
   privileges        = ["CREATE INTEGRATION"]
-  account_role_name = snowflake_account_role.integration_management.name
+  account_role_name = snowflake_account_role.integration.name
   on_account        = true
 }
 
-resource "snowflake_grant_account_role" "integration_management" {
-  role_name = snowflake_account_role.integration_management.name
-  user_name = snowflake_user.integration_management.name
+resource "snowflake_grant_account_role" "integration" {
+  role_name = snowflake_account_role.integration.name
+  user_name = snowflake_user.integration.name
 }
 
-resource "snowflake_grant_account_role" "_integration_management" {
-  role_name        = snowflake_account_role.integration_management.name
+resource "snowflake_grant_account_role" "_integration" {
+  role_name        = snowflake_account_role.integration.name
   parent_role_name = "ACCOUNTADMIN"
 }
