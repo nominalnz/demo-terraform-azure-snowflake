@@ -30,6 +30,6 @@ $secureAccessToken = ConvertTo-SecureString $accessToken -AsPlainText -Force
 
 # Connect to Microsoft Graph using the SecureString access token
 Connect-MgGraph -AccessToken $secureAccessToken
-```
+``` 
 
 Then follow this guide: [Configure token lifetime policies (preview)](https://learn.microsoft.com/en-us/entra/identity-platform/configure-token-lifetimes)

@@ -70,3 +70,58 @@ resource "azurerm_role_assignment" "tfstate_container_contributor" {
 #   role_definition_name = "User Access Administrator"
 #   principal_id         = azuread_service_principal.terraform.id
 # }
+
+resource "azuread_application" "policy" {
+  display_name = "sp-id-snowflake-management-demo-policy"
+  owners       = [data.azuread_client_config.current.object_id]
+  tags         = local.common_tags_list
+
+  required_resource_access {
+    resource_app_id = data.azuread_application_published_app_ids.well_known.result["MicrosoftGraph"]
+
+    resource_access {
+      id   = data.azuread_service_principal.msgraph.app_role_ids["Policy.ReadWrite.ApplicationConfiguration"]
+      type = "Role"
+    }
+
+    resource_access {
+      id   = data.azuread_service_principal.msgraph.app_role_ids["Policy.Read.All"]
+      type = "Role"
+    }
+
+    resource_access {
+      id   = data.azuread_service_principal.msgraph.app_role_ids["Application.ReadWrite.All"]
+      type = "Role"
+    }
+  }
+}
+
+resource "azuread_application_password" "policy" {
+  application_id = azuread_application.policy.id
+  display_name   = "local"
+}
+
+resource "azuread_service_principal" "policy" {
+  client_id                    = azuread_application.policy.client_id
+  app_role_assignment_required = false
+  owners                       = [data.azuread_client_config.current.object_id]
+}
+
+# Grant Admin Consent
+resource "azuread_app_role_assignment" "msgraph_policy_readwrite_applicationconfiguration" {
+  app_role_id         = data.azuread_service_principal.msgraph.app_role_ids["Policy.ReadWrite.ApplicationConfiguration"]
+  principal_object_id = azuread_service_principal.policy.object_id
+  resource_object_id  = data.azuread_service_principal.msgraph.object_id
+}
+
+resource "azuread_app_role_assignment" "msgraph_policy_read_all" {
+  app_role_id         = data.azuread_service_principal.msgraph.app_role_ids["Policy.Read.All"]
+  principal_object_id = azuread_service_principal.policy.object_id
+  resource_object_id  = data.azuread_service_principal.msgraph.object_id
+}
+
+resource "azuread_app_role_assignment" "msgraph_application_readwrite_all" {
+  app_role_id         = data.azuread_service_principal.msgraph.app_role_ids["Application.ReadWrite.All"]
+  principal_object_id = azuread_service_principal.policy.object_id
+  resource_object_id  = data.azuread_service_principal.msgraph.object_id
+}

@@ -14,3 +14,7 @@
 output "oauth_server_client_id" {
   value = azuread_application.oauth_server.client_id
 }
+
+output "oauth_server_object_id" {
+  value = azuread_application.oauth_server.object_id
+}

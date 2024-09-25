@@ -20,15 +20,24 @@ output "azp_provisioner_role" {
   value = snowflake_account_role.azp_provisioner.name
 }
 
-output "integration_user" {
-  value = snowflake_user.integration.name
+output "integration_admin_user" {
+  value = snowflake_user.integration_admin.name
 }
 
-output "integration_password" {
-  value     = snowflake_user.integration.password
+output "integration_admin_password" {
+  value     = snowflake_user.integration_admin.password
   sensitive = true
 }
 
-output "integration_role" {
-  value = snowflake_account_role.integration.name
+output "integration_admin_role" {
+  value = snowflake_account_role.integration_admin.name
+}
+
+output "policy_client_id" {
+  value = azuread_application.policy.client_id
+}
+
+output "policy_secret" {
+  value     = azuread_application_password.policy.value
+  sensitive = true
 }

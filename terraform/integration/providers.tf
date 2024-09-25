@@ -16,5 +16,5 @@ terraform {
 }
 
 provider "snowflake" {
-  role = "INTEGRATION"
+  role = "INTEGRATION_ADMIN"
 }
