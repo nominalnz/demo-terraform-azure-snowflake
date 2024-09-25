@@ -18,3 +18,7 @@ output "oauth_client_principal_id" {
 output "azure_tenant_id" {
   value = data.azuread_client_config.current.tenant_id
 }
+
+output "snowflake_account" {
+  value = data.snowflake_current_account.this
+}

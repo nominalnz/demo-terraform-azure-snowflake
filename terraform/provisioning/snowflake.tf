@@ -1,3 +1,5 @@
+data "snowflake_current_account" "this" {}
+
 resource "snowflake_user" "oauth_user" {
   name         = "SNOWSQL_OAUTH_USER"
   login_name   = azuread_service_principal.oauth_client.object_id
