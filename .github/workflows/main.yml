@@ -37,7 +37,8 @@ jobs:
           access_token=$(az account get-access-token --scope ${{ secrets.OAUTH_SERVER_IDENTIFIER_URI }}/.default --query accessToken -o tsv)
           echo "SNOWFLAKE_CONNECTIONS_DEFAULT_TOKEN=$access_token" >> "$GITHUB_ENV"
 
-    - uses: Snowflake-Labs/snowflake-cli-action@v1
+    - name: Install Snowflake CLI
+      uses: Snowflake-Labs/snowflake-cli-action@v1
       with:
         cli-version: latest
         default-config-file-path: config.toml
